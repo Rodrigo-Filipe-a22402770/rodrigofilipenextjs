@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-//import "./globals.css";
+import "./globals.css";
+import Link from 'next/link'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,8 +33,9 @@ export default function RootLayout({
         <header className="flex flex-col items-center">
           <h1>React & Next.js</h1>
           <nav className="fex gap-4">
-            <link href="/">Intro</link>
-            <link href="/sobre">Sobre</link>
+            <Link href="/">Intro</Link>
+            <Link href="/sobre">Sobre</Link>
+            <Link href="/projetos">Progetos</Link>
           </nav>
         </header>
         
