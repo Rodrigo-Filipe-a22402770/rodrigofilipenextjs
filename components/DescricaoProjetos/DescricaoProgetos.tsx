@@ -1,16 +1,15 @@
-import React from 'react'
-import Link from 'next/link'
+import Projeto from "./../Projeto/Projeto";
 
-export default function DescricaoProgetos() {
+export default function DescricaoProjetos() {
   return (
-    <>
-    <h2>Progetos</h2>
-    <p>Fiz um molho de progetros</p>
-
-    <p>Pega aí isso</p>
-
-    <Link href="https://rodrigofilipe2006.github.io/#projetos">🤜 isso </Link>
-
-    </>
-  )
+    <div className="p-4 bg-gray-100 rounded">
+      <p>Fiz vários projetos. Veja no GitHub:</p>
+      <a href="https://github.com/Rodrigo-Filipe-a22402770" target="_blank" rel="noopener noreferrer">
+        O meu GitHub
+      </a>
+      <Projeto nome="Loja" url="" />
+      <Projeto nome="Site com JS Interativo" url="https://github.com/rodrigofilipe2006/rodrigofilipe2006.github.io" />
+    </div>
+    //adicionar loja
+  );
 }

@@ -1,12 +1,9 @@
-import MagiaDoJX from "@/components/MagiaDoJSX/MagiaDoJSX";
-
-
-export default function page() {
+export default function HomePage() {
   return (
-    <div>
-      <h2>Interfaces Modernos</h2>
-      <p>Bem vindo á minha app em React e Next.Js.</p>
-      <MagiaDoJX />
-    </div>
+    <main className="flex min-h-screen flex-col items-center p-24">
+      <h1>Bem vindo ao meu site</h1>
+      <h2>Aqui estarão todos os projetos que fiz em react</h2>
+      <img src="/images/fixe.jpg" alt="fixe" />
+    </main>
   );
 }

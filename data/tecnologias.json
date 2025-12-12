@@ -1,20 +1,62 @@
 [
   {
     "title": "HTML",
-    "image": "html.svg",
-    "description": "Linguagem de marcação utilizada para estruturar páginas web.",
-    "rating": 4
+    "image": "/images/tecnologias/html.png",
+    "description": "Linguagem de marcação usada para estruturar conteúdo na web.",
+    "rating": 5
   },
   {
     "title": "CSS",
-    "image": "css.svg",
-    "description": "Folhas de estilo responsáveis pela aparência e layout das páginas.",
-    "rating": 4
+    "image": "/images/tecnologias/css.png",
+    "description": "Folhas de estilo para dar cor, layout e beleza às páginas.",
+    "rating": 5
   },
   {
     "title": "JavaScript",
-    "image": "js.svg",
-    "description": "Linguagem de programação que adiciona interatividade ao frontend.",
+    "image": "/images/tecnologias/js.png",
+    "description": "Linguagem que dá vida e interatividade aos sites.",
+    "rating": 5
+  },
+  {
+    "title": "React",
+    "image": "/images/tecnologias/react.webp",
+    "description": "Biblioteca JavaScript para criar interfaces de utilizador incríveis.",
+    "rating": 5
+  },
+  {
+    "title": "Next.js",
+    "image": "/images/tecnologias/nextjs.png",
+    "description": "Framework React com renderização no servidor e performance top.",
+    "rating": 5
+  },
+  {
+    "title": "Tailwind CSS",
+    "image": "/images/tecnologias/tailwind.png",
+    "description": "Framework CSS utilitário para estilizar rápido e bonito.",
+    "rating": 5
+  },
+  {
+    "title": "TypeScript",
+    "image": "/images/tecnologias/Typescript.png",
+    "description": "JavaScript com tipos — menos bugs, mais confiança.",
+    "rating": 5
+  },
+  {
+    "title": "Git",
+    "image": "/images/tecnologias/Git.png",
+    "description": "Controlo de versões — essencial para qualquer programador.",
+    "rating": 5
+  },
+  {
+    "title": "VS Code",
+    "image": "/images/tecnologias/vscode.png",
+    "description": "O editor de código mais usado do mundo.",
+    "rating": 5
+  },
+  {
+    "title": "Node.js",
+    "image": "/images/tecnologias/nodejs.webp",
+    "description": "JavaScript no servidor — full-stack feito fácil.",
     "rating": 5
   }
 ]

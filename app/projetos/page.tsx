@@ -1,10 +1,10 @@
-import React from 'react'
-import Link from 'next/link' 
-import DescricaoProgetos from '@/components/DescricaoProjetos/DescricaoProgetos'
+import DescricaoProjetos from "../../components/DescricaoProjetos/DescricaoProgetos";
 
 export default function ProjetosPage() {
   return (
-    <DescricaoProgetos></DescricaoProgetos>
-
-  )
+    <main className="p-4">
+      <h1>Projetos</h1>
+      <DescricaoProjetos />
+    </main>
+  );
 }
