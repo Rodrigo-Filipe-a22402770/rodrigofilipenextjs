@@ -5,7 +5,7 @@ import Relogio from "../Relogio/Relogio";
 export default function Footer() {
   return (
     <footer className="bg-green-600 p-4 text-white text-center">
-      <p>Footer Content</p>
+      <p>Progeto realizado por Rodrigo Filipe</p>
       <Relogio />
     </footer>
   );

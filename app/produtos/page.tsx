@@ -1,146 +1,106 @@
-"use client";
+// app/produtos/page.tsx
+'use client';
 
 import useSWR from "swr";
 import { Product } from "@/models/interfaces";
-import { Spinner } from "@/components/ui/spinner";
 import ProdutoCard from "@/components/ProdutoCard/ProdutoCard";
+import FiltrosCategoria from "@/components/FiltrosCategoria/FiltrosCategoria";
+import Carrinho from "@/components/Carrinho/Carrinho";
+import { Spinner } from "@/components/ui/spinner";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 
+// Fetcher único e reutilizável (com corsproxy)
 const fetcher = (url: string) =>
-  fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`)
-    .then((res) => res.json())
-    .then((data) => JSON.parse(data.contents));
+  fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`).then(res => res.json());
 
+/**
+ * Página principal da loja
+ */
 export default function ProdutosPage() {
-  const { data, error, isLoading } = useSWR<Product[]>(
+  // CORRIGIDO: fetcher como segundo argumento
+  const { data: products, error, isLoading } = useSWR<Product[]>(
     "https://deisishop.pythonanywhere.com/products",
     fetcher
   );
 
   const [search, setSearch] = useState("");
-  const [filteredData, setFilteredData] = useState<Product[]>([]);
   const [order, setOrder] = useState("name-asc");
-  const [cart, setCart] = useState<Product[]>([]);
-  const [isStudent, setIsStudent] = useState(false);
-  const [coupon, setCoupon] = useState("");
-  const [response, setResponse] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-  // Atualiza filteredData quando muda pesquisa ou dados
+  // Filtra e ordena produtos
   useEffect(() => {
-    if (!data) return;
+    if (!products) return;
 
-    let filtered = data.filter((p) =>
-      p.title.toLowerCase().includes(search.toLowerCase())
-    );
+    let list = [...products];
 
-    // Ordenação
-    if (order === "name-asc") filtered.sort((a, b) => a.title.localeCompare(b.title));
-    if (order === "name-desc") filtered.sort((a, b) => b.title.localeCompare(a.title));
-    if (order === "price-asc") filtered.sort((a, b) => a.price - b.price);
-    if (order === "price-desc") filtered.sort((a, b) => b.price - a.price);
+    if (selectedCategories.length > 0) {
+      list = list.filter(p => selectedCategories.includes(p.category));
+    }
+    if (search) {
+      list = list.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
+    }
 
-    setFilteredData(filtered);
-  }, [data, search, order]);
+    list.sort((a, b) => {
+      if (order === "name-asc") return a.title.localeCompare(b.title);
+      if (order === "name-desc") return b.title.localeCompare(a.title);
+      if (order === "price-asc") return Number(a.price) - Number(b.price);
+      if (order === "price-desc") return Number(b.price) - Number(a.price);
+      return 0;
+    });
 
-  // Guarda carrinho no localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("cart");
-    if (saved) setCart(JSON.parse(saved));
-  }, []);
+    setFilteredProducts(list);
+  }, [products, search, order, selectedCategories]);
 
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product: Product) => setCart((prev) => [...prev, product]);
-  const removeFromCart = (id: number) => setCart((prev) => prev.filter((p) => p.id !== id));
-  const total = cart.reduce((sum, p) => sum + p.price, 0);
-
-  const buy = () => {
-    setResponse("Compra realizada com sucesso! (simulação)");
-  };
-
-  if (error) return <p className="text-red-500 text-center text-2xl">Erro ao carregar produtos</p>;
-  if (isLoading) return <div className="flex justify-center items-center h-screen"><Spinner /></div>;
+  // Estados de loading e erro
+  if (error) return <div className="text-center py-20 text-2xl text-red-600">Erro ao carregar produtos</div>;
+  if (isLoading) return <div className="flex min-h-screen items-center justify-center"><Spinner /></div>;
 
   return (
-    <main className="p-8 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-center">DEISI Shop</h1>
+    <main className="min-h-screen bg-gray-50 py-12 px-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-5xl font-bold text-center mb-12 text-gray-800">DEISI Shop</h1>
 
-      {/* Pesquisa + Ordenação */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4">
-        <input
-          type="text"
-          placeholder="Pesquisar produto..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border rounded-lg flex-1"
-        />
-        <select
-          value={order}
-          onChange={(e) => setOrder(e.target.value)}
-          className="px-4 py-2 border rounded-lg"
-        >
-          <option value="name-asc">Nome (A → Z)</option>
-          <option value="name-desc">Nome (Z → A)</option>
-          <option value="price-asc">Preço (barato → caro)</option>
-          <option value="price-desc">Preço (caro → barato)</option>
-        </select>
-      </div>
-
-      {/* Lista de produtos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        {filteredData.map((product) => (
-          <ProdutoCard
-            key={product.id}
-            product={product}
-            onAdd={() => addToCart(product)}
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Filtros laterais */}
+          <FiltrosCategoria
+            selectedCategories={selectedCategories}
+            onChange={setSelectedCategories}
           />
-        ))}
-      </div>
 
-      {/* Carrinho */}
-      <div className="bg-gray-100 p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Carrinho ({cart.length} itens)</h2>
-        {cart.length === 0 ? (
-          <p className="text-gray-500">Carrinho vazio</p>
-        ) : (
-          <>
-            {cart.map((product) => (
-              <div key={product.id} className="flex justify-between items-center mb-3 p-3 bg-white rounded">
-                <span>{product.title}</span>
-                <div className="flex items-center gap-3">
-                  <span className="font-bold">{product.price}€</span>
-                  <button
-                    onClick={() => removeFromCart(product.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Remover
-                  </button>
-                </div>
-              </div>
-            ))}
-            <div className="text-xl font-bold mt-6">Total: {total}€</div>
-          </>
-        )}
+          {/* Área principal */}
+          <div className="flex-1">
+            {/* Pesquisa + Ordenação */}
+            <div className="flex flex-col md:flex-row gap-4 mb-10">
+              <input
+                type="text"
+                placeholder="Pesquisar produtos..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="flex-1 px-5 py-3 border rounded-lg text-lg"
+              />
+              <select
+                value={order}
+                onChange={e => setOrder(e.target.value)}
+                className="px-5 py-3 border rounded-lg bg-white text-lg"
+              >
+                <option value="name-asc">Nome (A-Z)</option>
+                <option value="name-desc">Nome (Z-A)</option>
+                <option value="price-asc">Preço crescente</option>
+                <option value="price-desc">Preço decrescente</option>
+              </select>
+            </div>
 
-        <div className="mt-6 space-y-4">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={isStudent} onChange={(e) => setIsStudent(e.target.checked)} />
-            <span>Estudante DEISI (desconto simulado)</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Cupão de desconto"
-            value={coupon}
-            onChange={(e) => setCoupon(e.target.value)}
-            className="px-4 py-2 border rounded w-full"
-          />
-          <Button onClick={buy} className="w-full text-lg">
-            Comprar
-          </Button>
-          {response && <p className="text-green-600 font-bold text-center">{response}</p>}
+            {/* Produtos */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
+              {filteredProducts.map(product => (
+                <ProdutoCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Carrinho */}
+            <Carrinho />
+          </div>
         </div>
       </div>
     </main>

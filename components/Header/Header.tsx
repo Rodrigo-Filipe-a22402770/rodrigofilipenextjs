@@ -7,11 +7,8 @@ export default function Header() {
         <Link href="/">Home</Link>
         <Link href="/projetos">Projetos</Link>
         <Link href="/tecnologias">Tecnologias</Link>
-        <Link href="/caracteristicas">Caracteristicas</Link>
         <Link href="/contador">Contador</Link>
-        <Link href="/input">Input</Link>
         <Link href="/produtos">Produtos</Link>
-        <Link href="/categorias">Categorias</Link>
       </nav>
     </header>
   );
