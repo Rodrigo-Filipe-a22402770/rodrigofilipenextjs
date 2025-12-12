@@ -27,7 +27,7 @@ export default function ProdutoPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-6">
       <div className="max-w-5xl mx-auto">
-        <Link href="/produtos" className="inline-block mb-8 text-blue-600 hover:underline text-lg">
+        <Link href="/produtos" className="inline-block mb-8 text-green-600 hover:underline text-lg">
           ← Voltar à loja
         </Link>
         {product && <ProdutoDetalhe product={product} />}
