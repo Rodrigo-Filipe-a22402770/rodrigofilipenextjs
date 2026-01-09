@@ -1,0 +1,248 @@
+==================================================================
+    REACT, NEXT.JS, TYPESCRIPT & CONCEITOS
+    Com exemplos de código e como implementar
+==================================================================
+
+1. REACT
+- Biblioteca para criar interfaces declarativas baseadas em componentes.
+- Tudo é componente: blocos reutilizáveis de UI + lógica.
+
+Implementação básica:
+Crie um componente funcional:
+function BemVindo() {
+  return <h1>Olá mundo!</h1>;
+}
+
+2. NEXT.JS
+- Framework React com rotas automáticas, SSR, SSG, etc.
+- Pasta app/ define rotas (app/page.tsx → /).
+
+Implementação:
+Crie app/page.tsx:
+export default function HomePage() {
+  return <h1>Página inicial</h1>;
+}
+
+3. TYPESCRIPT
+- JavaScript + tipos estáticos → erros em tempo de compilação.
+- Use .tsx para componentes React.
+
+Implementação:
+Ative strict no tsconfig.json e tipa tudo (props, state, etc.).
+
+4. TAILWIND CSS
+- Classes utility diretamente no JSX.
+
+Exemplo implementação:
+<div className="bg-blue-600 text-white p-8 rounded-lg shadow-md">
+  Cartão estilizado
+</div>
+
+5. JSX
+- Sintaxe HTML-like dentro do JS/TS.
+- { expressão } → insere valores JS.
+- Renderização condicional: {cond ? <A/> : <B/>} ou {cond && <A/>}
+- Map para listas: array.map(item => <Componente key={item.id} />)
+
+Exemplo completo:
+function ListaProdutos({ produtos }: { produtos: Product[] }) {
+  return (
+    <ul>
+      {produtos.map(prod => (
+        <li key={prod.id}>
+          {prod.title} - {prod.price > 50 ? 'Caro' : 'Barato'}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+6. PÁGINA (Next.js)
+- Ficheiro page.tsx numa pasta → representa uma rota.
+
+Implementação:
+app/produtos/page.tsx
+'use client';
+export default function ProdutosPage() {
+  return <h1>Loja DEISI</h1>;
+}
+
+7. COMPONENTE
+- Função que retorna JSX. Pode receber props.
+
+Implementação básica:
+function Botao({ texto }: { texto: string }) {
+  return <button className="bg-green-500 px-4 py-2 rounded">{texto}</button>;
+}
+
+// Uso: <Botao texto="Comprar" />
+
+8. ORGANIZAÇÃO DO CÓDIGO
+- Pastas: app/ (rotas), components/, models/, public/.
+- Use comentários claros.
+
+Exemplo:
+// components/ProdutoCard/ProdutoCard.tsx
+// Componente que mostra um produto individual
+export default function ProdutoCard({ product }: { product: Product }) { ... }
+
+9. EXPORT
+- export default → import sem chavetas.
+- export { Nome } → import com chavetas.
+
+Exemplo:
+export interface Product { ... }
+export default function ProdutoCard() { ... }
+
+10. INTERFACE (TypeScript)
+- Define a estrutura de um objeto → tipagem forte.
+
+Implementação:
+interface Product {
+  id: number;
+  title: string;
+  price: number | string;
+  category: string;
+}
+
+// Uso em props:
+function Card({ product }: { product: Product }) { ... }
+
+11. PROPS
+- Dados passados para componente (como atributos HTML).
+
+Implementação:
+<ProdutoCard product={produtoAtual} onClick={() => addToCart(produtoAtual)} />
+
+No componente:
+interface Props {
+  product: Product;
+  onClick: () => void;
+}
+export default function ProdutoCard({ product, onClick }: Props) { ... }
+
+12. LOCALSTORAGE
+- Armazena strings no browser.
+
+Implementação (com useEffect):
+const [cart, setCart] = useState<Item[]>([]);
+
+useEffect(() => {
+  const saved = localStorage.getItem('cart');
+  if (saved) setCart(JSON.parse(saved));
+}, []);
+
+useEffect(() => {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}, [cart]);
+
+13. ROTA (estática)
+- Pasta + page.tsx → URL correspondente.
+
+Exemplo: app/sobre/page.tsx → /sobre
+
+Link: import Link from 'next/link';
+<Link href="/sobre">Sobre</Link>
+
+14. ROTA DINÂMICA
+- Pasta [param] → captura valor na URL.
+
+Exemplo: app/produtos/[id]/page.tsx → /produtos/5
+
+15. USEPARAMS
+- Hook para ler parâmetros dinâmicos.
+
+Implementação:
+import { useParams } from 'next/navigation';
+
+export default function ProdutoPage() {
+  const { id } = useParams(); // id é string
+  // usar id para fetch
+}
+
+16. EVENTO
+- onClick, onChange, etc.
+
+Exemplo:
+<button onClick={() => setCount(c => c + 1)}>Incrementar</button>
+
+<input
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+/>
+
+17. USESTATE
+- Gerencia estado local → re-render ao mudar.
+
+Implementação:
+const [count, setCount] = useState(0);
+const [search, setSearch] = useState('');
+
+<button onClick={() => setCount(count + 1)}>{count}</button>
+
+18. USEEFFECT
+- Executa código em momentos específicos (montagem, atualização).
+
+Implementação comum:
+useEffect(() => {
+  // código ao montar
+  return () => { // cleanup ao desmontar }
+}, []); // [] = só na montagem
+
+useEffect(() => {
+  // filtrar quando search mudar
+  const filtered = products.filter(p => p.title.includes(search));
+  setFiltered(filtered);
+}, [search, products]);
+
+19. API / FETCH
+- Busca dados de endpoint.
+
+Implementação async/await:
+async function carregarProdutos() {
+  const res = await fetch('https://api.../products');
+  const data = await res.json();
+  setProducts(data);
+}
+
+20. ASYNC / AWAIT
+- Forma elegante de lidar com promessas.
+
+Exemplo dentro de useEffect ou evento:
+const handleBuy = async () => {
+  const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+  const result = await res.json();
+};
+
+21. USESWR
+- Hook para fetching com cache e revalidação automática.
+
+Implementação:
+import useSWR from 'swr';
+
+const fetcher = (url: string) => fetch(url).then(r => r.json());
+
+const { data, error, isLoading } = useSWR('/api/produtos', fetcher);
+
+if (isLoading) return <Spinner />;
+if (error) return <p>Erro</p>;
+return <Lista data={data} />;
+
+22. JSON
+- Formato texto para objetos.
+
+JSON.stringify(obj) → string
+JSON.parse(string) → objeto
+
+Exemplo localStorage:
+localStorage.setItem('cart', JSON.stringify(cart));
+const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+==================================================================
+DICAS FINAIS PARA IMPLEMENTAR BEM
+- Sempre 'use client' em componentes com hooks (useState, useEffect, useSWR).
+- Tipa tudo com interfaces (props, dados API, state).
+- Trata loading e error em fetches.
+- Usa key única em .map() para listas.
+- Testa com npm run dev e DevTools (React DevTools).
+==================================================================

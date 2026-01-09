@@ -7,6 +7,7 @@ export default function CaracteristicaPage() {
   const char = params.caracteristica as string;
 
   return (
+
     <main className="flex justify-center items-center min-h-screen">
       <div className="p-4 bg-gray-200 rounded">
         <p>{char}</p>
@@ -15,5 +16,6 @@ export default function CaracteristicaPage() {
         </Link>
       </div>
     </main>
+    
   );
 }
